@@ -38,7 +38,7 @@ Salma Unity Care Hospital is dedicated to providing accessible, high-quality hea
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/KOSASIH/salma-unity-care-hospital.git
+   git clone https://github.com/Elmahrosa/salma-unity-care-hospital.git
    cd salma-unity-care-hospital
    ```
 
