@@ -1,0 +1,27 @@
+version: '3.8'  # Specify the Docker Compose file format version
+
+services:
+  app:
+    image: salma-unity-care-hospital:latest  # Name of the application image
+    build:
+      context: .  # Build context (current directory)
+      dockerfile: Dockerfile  # Specify the Dockerfile to use
+    ports:
+      - "3000:3000"  # Map host port 3000 to container port 3000
+    environment:
+      NODE_ENV: development  # Set the environment to development
+      MONGODB_URI: mongodb://mongo:27017/salma_unity_care_hospital  # MongoDB connection string
+    volumes:
+      - .:/usr/src/app  # Mount the current directory to /usr/src/app in the container
+    depends_on:
+      - mongo  # Ensure MongoDB starts before the app
+
+  mongo:
+    image: mongo:latest  # Use the latest MongoDB image
+    ports:
+      - "27017:27017"  # Map host port 27017 to container port 27017
+    volumes:
+      - mongo_data:/data/db  # Persist MongoDB data
+
+volumes:
+  mongo_data:  # Define a named volume for MongoDB data persistence
