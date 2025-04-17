@@ -7,6 +7,8 @@ Salma Unity Care Hospital is dedicated to providing accessible, high-quality hea
 
 # Salma Unity Care Hospital
 
+![Salma Unity Care Hospital](docs/salma-unity-care-hospital.jpg)
+
 ## Overview
 
 **Salma Unity Care Hospital** is an innovative healthcare platform designed to provide high-quality, accessible medical services to communities worldwide. Our mission is to enhance health equity through advanced technology, compassionate care, and community engagement. This project leverages modern web technologies, microservices architecture, and best practices in software development to create a scalable and maintainable healthcare solution.
