@@ -1,9 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './DashboardPage.css'; // Importing CSS for styling
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { Bar } from 'react-chartjs-2';
+import { useFetch } from '../hooks/useFetch';
+import { Spinner } from 'react-bootstrap'; // Assuming you're using react-bootstrap for loading spinner
+import 'chart.js/auto'; // Ensure Chart.js is properly imported
 
 const DashboardPage = () => {
+    const { data: analytics, error, loading } = useFetch('/api/analytics/health-trends');
+    const [chartData, setChartData] = useState({
+        labels: [],
+        datasets: [
+            {
+                label: 'Health Trends',
+                data: [],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            },
+        ],
+    });
+
+    useEffect(() => {
+        if (analytics) {
+            setChartData({
+                labels: analytics.labels || [],
+                datasets: [
+                    {
+                        label: 'Health Trends',
+                        data: analytics.values || [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    },
+                ],
+            });
+        }
+    }, [analytics]);
+
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="error-container">
+                <h2>Error fetching data</h2>
+                <p>{error.message}</p>
+            </div>
+        );
+    }
+
     return (
         <div className="dashboard-page">
             <Header />
@@ -36,8 +90,46 @@ const DashboardPage = () => {
                         <h3><a href="/medical-records">View Medical Records</a></h3>
                     </div>
                     <div className="link-card">
-                        <h3><a href="/users">User  Management</a></h3>
+                        <h3><a href="/users">User Management</a></h3>
                     </div>
+                </section>
+                <section className="chart-section">
+                    <h2>Health Analytics</h2>
+                    <Bar
+                        data={chartData}
+                        options={{
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Values',
+                                    },
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Time',
+                                    },
+                                },
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (tooltipItem) => {
+                                            return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                                        },
+                                    },
+                                },
+                            },
+                        }}
+                    />
                 </section>
             </main>
             <Footer />
