@@ -1,0 +1,57 @@
+pipeline {
+    agent any // Use any available agent
+
+    environment {
+        NODE_HOME = '/usr/local/node' // Define Node.js environment variable
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-repository/node-app.git' // Checkout code from Git repository
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    sh 'npm install' // Install dependencies
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    sh 'npm test' // Run unit tests
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    sh 'npm run deploy:staging' // Deploy to staging environment
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                echo 'Cleaning up resources...' // Cleanup after pipeline execution
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed!' // Message after pipeline completion
+        }
+        success {
+            echo 'Deployment to staging successful!' // Success message
+        }
+        failure {
+            echo 'Pipeline failed! Check the logs for errors.' // Failure message
+        }
+    }
+}
