@@ -1,0 +1,372 @@
+openapi: 3.0.3
+info:
+  title: Library Management API
+  description: API for managing library resources, including books, authors, and users.
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@libraryapi.com
+    url: https://libraryapi.com/support
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.library.com/v1
+    description: Production server
+
+paths:
+  /books:
+    get:
+      summary: Retrieve a list of books
+      description: Returns a list of all books in the library.
+      operationId: getBooks
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of books to return
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: offset
+          in: query
+          description: Number of books to skip before starting to collect the result set
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Add a new book
+      description: Adds a new book to the library.
+      operationId: addBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewBook'
+      responses:
+        '201':
+          description: Book created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Invalid input
+
+  /books/{bookId}:
+    get:
+      summary: Retrieve a specific book
+      description: Returns details of a specific book by ID.
+      operationId: getBookById
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          description: ID of the book to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Book details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+
+    put:
+      summary: Update a book
+      description: Updates the details of an existing book.
+      operationId: updateBook
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          description: ID of the book to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBook'
+      responses:
+        '200':
+          description: Book updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+
+    delete:
+      summary: Delete a book
+      description: Deletes a specific book by ID.
+      operationId: deleteBook
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          description: ID of the book to delete
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Book deleted successfully
+        '404':
+          description: Book not found
+
+  /authors:
+    get:
+      summary: Retrieve a list of authors
+      description: Returns a list of all authors in the library.
+      operationId: getAuthors
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of authors to return
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: offset
+          in: query
+          description: Number of authors to skip before starting to collect the result set
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: A list of authors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Add a new author
+      description: Adds a new author to the library.
+      operationId: addAuthor
+      requestBody:
+        required : true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewAuthor'
+      responses:
+        '201':
+          description: Author created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '400':
+          description: Invalid input
+
+  /authors/{authorId}:
+    get:
+      summary: Retrieve a specific author
+      description: Returns details of a specific author by ID.
+      operationId: getAuthorById
+      parameters:
+        - name: authorId
+          in: path
+          required: true
+          description: ID of the author to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Author details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '404':
+          description: Author not found
+
+    put:
+      summary: Update an author
+      description: Updates the details of an existing author.
+      operationId: updateAuthor
+      parameters:
+        - name: authorId
+          in: path
+          required: true
+          description: ID of the author to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAuthor'
+      responses:
+        '200':
+          description: Author updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '404':
+          description: Author not found
+
+    delete:
+      summary: Delete an author
+      description: Deletes a specific author by ID.
+      operationId: deleteAuthor
+      parameters:
+        - name: authorId
+          in: path
+          required: true
+          description: ID of the author to delete
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Author deleted successfully
+        '404':
+          description: Author not found
+
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "12345"
+        title:
+          type: string
+          example: "The Great Gatsby"
+        author:
+          type: string
+          example: "F. Scott Fitzgerald"
+        publishedDate:
+          type: string
+          format: date
+          example: "1925-04-10"
+        isbn:
+          type: string
+          example: "9780743273565"
+        available:
+          type: boolean
+          example: true
+
+    NewBook:
+      type: object
+      required:
+        - title
+        - author
+        - publishedDate
+        - isbn
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+        publishedDate:
+          type: string
+          format: date
+        isbn:
+          type: string
+
+    UpdateBook:
+      type: object
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+        publishedDate:
+          type: string
+          format: date
+        isbn:
+          type: string
+
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "67890"
+        name:
+          type: string
+          example: "George Orwell"
+        birthDate:
+          type: string
+          format: date
+          example: "1903-06-25"
+        nationality:
+          type: string
+          example: "British"
+
+    NewAuthor:
+      type: object
+      required:
+        - name
+        - birthDate
+        - nationality
+      properties:
+        name:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        nationality:
+          type: string
+
+    UpdateAuthor:
+      type: object
+      properties:
+        name:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        nationality:
+          type: string
+
+security:
+  - apiKey: []
+
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+tags:
+  - name: Books
+    description: Operations related to books in the library
+  - name: Authors
+    description: Operations related to authors in the library
+
+externalDocs:
+  description: Find more info here
+  url: https://libraryapi.com/docs
