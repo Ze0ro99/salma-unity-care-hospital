@@ -1,3 +1,12 @@
+[![IMF Certified](https://img.shields.io/badge/IMF-Certified-007bff.svg)](https://www.imf.org/en/Data)  [![WHO Certified](https://img.shields.io/badge/WHO-Certified-28a745.svg)](https://www.who.int/)  [![AHA Certified](https://img.shields.io/badge/AHA-Certified-d9534f.svg)](https://www.heart.org/)  
+
+[![CDC Certified](https://img.shields.io/badge/CDC-Certified-ffcc00.svg)](https://www.cdc.gov/)  
+
+
+## Additional Information
+
+For more details about our certifications and compliance with health standards, please visit the respective organizations' websites linked above.
+
 <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/Elmahrosa/salma-unity-care-hospital">Salma Unity Care Hospital</a> by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://www.linkedin.com/in/kosasih-81b46b5a">KOSASIH</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Creative Commons Attribution 4.0 International<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""></a></p>
 
 # salma-unity-care-hospital
