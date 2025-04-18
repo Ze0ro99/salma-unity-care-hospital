@@ -1,0 +1,14 @@
+/telemedicine/
+├── backend/
+│   ├── server.js             // (Node.js backend utama)
+│   ├── socket.js             // (WebRTC signaling dan chat real-time)
+│   └── bookingController.js  // (Kontrol booking jadwal)
+├── frontend/
+│   ├── App.jsx               // (Komponen utama React)
+│   ├── VideoCall.jsx         // (Komponen video call WebRTC)
+│   ├── ChatBox.jsx           // (Komponen chat)
+│   └── BookingForm.jsx       // (Formulir booking konsultasi)
+├── public/
+│   └── index.html
+├── package.json
+└── README.md
