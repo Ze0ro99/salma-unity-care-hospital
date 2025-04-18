@@ -11,10 +11,22 @@ services:
     environment:
       NODE_ENV: development  # Set the environment to development
       MONGODB_URI: mongodb://mongo:27017/salma_unity_care_hospital  # MongoDB connection string
+      API_KEY: ${API_KEY}  # Example of using an environment variable for API keys
+      JWT_SECRET: ${JWT_SECRET}  # Example of using an environment variable for JWT secret
     volumes:
       - .:/usr/src/app  # Mount the current directory to /usr/src/app in the container
     depends_on:
-      - mongo  # Ensure MongoDB starts before the app
+      mongo:  # Ensure MongoDB starts before the app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]  # Health check endpoint
+      interval: 30s  # Check every 30 seconds
+      timeout: 10s  # Timeout after 10 seconds
+      retries: 3  # Retry 3 times before marking as unhealthy
+    logging:
+      driver: "json-file"  # Use the json-file logging driver
+      options:
+        max-size: "10m"  # Maximum size of the log file
+        max-file: "3"  # Keep a maximum of 3 log files
 
   mongo:
     image: mongo:latest  # Use the latest MongoDB image
@@ -22,6 +34,31 @@ services:
       - "27017:27017"  # Map host port 27017 to container port 27017
     volumes:
       - mongo_data:/data/db  # Persist MongoDB data
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]  # Health check for MongoDB
+      interval: 30s  # Check every 30 seconds
+      timeout: 10s  # Timeout after 10 seconds
+      retries: 3  # Retry 3 times before marking as unhealthy
+
+  prometheus:
+    image: prom/prometheus  # Use the Prometheus image
+    ports:
+      - '9090:9090'  # Map host port 9090 to container port 9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml  # Mount Prometheus configuration file
+    depends_on:
+      - app  # Ensure the app service is up before starting Prometheus
+
+  grafana:
+    image: grafana/grafana  # Use the Grafana image
+    ports:
+      - '3001:3000'  # Map host port 3001 to container port 3000 (Grafana default)
+    depends_on:
+      - prometheus  # Ensure Prometheus is up before starting Grafana
 
 volumes:
   mongo_data:  # Define a named volume for MongoDB data persistence
+
+networks:
+  default:
+    driver: bridge  # Use the default bridge network
