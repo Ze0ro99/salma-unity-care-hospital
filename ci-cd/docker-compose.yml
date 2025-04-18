@@ -27,6 +27,11 @@ services:
       options:
         max-size: "10m"  # Maximum size of the log file
         max-file: "3"  # Keep a maximum of 3 log files
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'  # Limit to 0.5 CPU
+          memory: 512M  # Limit to 512MB of memory
 
   mongo:
     image: mongo:latest  # Use the latest MongoDB image
@@ -39,6 +44,11 @@ services:
       interval: 30s  # Check every 30 seconds
       timeout: 10s  # Timeout after 10 seconds
       retries: 3  # Retry 3 times before marking as unhealthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'  # Limit to 0.5 CPU
+          memory: 512M  # Limit to 512MB of memory
 
   prometheus:
     image: prom/prometheus  # Use the Prometheus image
@@ -48,6 +58,11 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml  # Mount Prometheus configuration file
     depends_on:
       - app  # Ensure the app service is up before starting Prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'  # Limit to 0.5 CPU
+          memory: 512M  # Limit to 512MB of memory
 
   grafana:
     image: grafana/grafana  # Use the Grafana image
@@ -55,6 +70,25 @@ services:
       - '3001:3000'  # Map host port 3001 to container port 3000 (Grafana default)
     depends_on:
       - prometheus  # Ensure Prometheus is up before starting Grafana
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'  # Limit to 0.5 CPU
+          memory: 512M  # Limit to 512MB of memory
+
+  ai-service:
+    build: ./ai-service  # Build the AI service from the specified directory
+    ports:
+      - '5001:5001'  # Map host port 5001 to container port 5001
+    environment:
+      NODE_ENV: development  # Set the environment to development
+      AI_MODEL_PATH: /models/your_model  # Path to the AI model
+      API_KEY: ${AI_API_KEY}  # Example of using an environment variable for AI API key
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]  # Health check for AI service
+      interval: 30s  # Check every 30 seconds
+      timeout: 10s  # Timeout after 10 seconds
+      retries: 3  # Retry 3 times before marking as unhealthy
 
 volumes:
   mongo_data:  # Define a named volume for MongoDB data persistence
@@ -62,3 +96,21 @@ volumes:
 networks:
   default:
     driver: bridge  # Use the default bridge network
+    services:
+      app:
+        networks:
+          - default
+      mongo:
+        networks:
+          - default
+      prometheus:
+        networks:
+          - default
+      grafana:
+        networks:
+          - default
+      ai-service:
+        networks:
+          - default
+
+# Note: Ensure to create a .env file in the root directory to manage sensitive information like API keys and secrets.
